@@ -1,0 +1,106 @@
+//#define EIGENLIB			// uncomment to use Eigen linear algebra library
+
+#include "fun_head_fast.h"
+
+// do not add Equations in this area
+
+MODELBEGIN
+
+// insert your equations here, ONLY between the MODELBEGIN and MODELEND words
+
+
+// ================================================================
+// ----------------------------------------------------------------
+// ================================================================
+
+
+EQUATION("Avg_Price")
+
+/*
+Mostra o que a Macro AVE faz
+
+*/
+
+v[0]=0; // iniciando o v[0]; pode ocorrer de não ser zero
+v[2]=0;
+CYCLE(cur, "FIRM")
+{
+	v[1] = VS(cur, "Price"); // VS= "S" é Especifico 
+	v[0] = v[0] + v[1]; // sum of prices
+	v[2] = v[2] + 1;  // count firms 
+}
+v[3] = v[0]/v[2];
+
+RESULT(v[3])
+
+
+
+//RESULT(AVE("Price"))
+
+
+
+EQUATION("Price")
+/*
+Preço = Grau de Monopólio*Preço desejado + (1 - Grau de Monopólio)*Preço médio no T-1
+
+p_t = theta*pd + (1 - theta)*p_t-1
+
+*/
+
+v[0] = V("theta");
+v[1] = V("Desired_Price");
+v[2] = AVEL("Price", 1); 
+// v[2] = VL(Avg_Price, 1)
+v[3] = v[0]*v[1]+(1-v[0])*v[2]; 
+RESULT(v[3])
+
+
+EQUATION("Desired_Price")
+
+/*
+Preço Desejado = (1 + Markup da firma)*Custo da firma
+
+pd = (1 + u)*c
+*/
+
+v[0] = V("markup");
+v[1] = V("Cost");
+v[2] = (1+v[0])*v[1];
+
+RESULT(v[2])
+
+
+
+EQUATION("Cost")
+
+/*
+Preço Desejado = (1 + Markup da firma)*Custo da firma
+
+pd = (1 + u)*c
+*/
+
+v[0] = V("avg");
+v[1] = V("sd");
+v[2] = norm(v[0], v[1]);
+
+RESULT(v[2])
+
+
+
+
+
+
+
+
+
+
+
+MODELEND
+
+// do not add Equations in this area
+
+void close_sim( void )
+{
+	// close simulation special commands go here
+}
+

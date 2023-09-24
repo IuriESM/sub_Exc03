@@ -1,0 +1,3 @@
+Avg_Price c_aleator Comp Cost Desired_Price Ms Price Quali
+adjs_ms avg Comp_Ave elas_p elas_q markup q_max q_min sd theta
+FIRM
