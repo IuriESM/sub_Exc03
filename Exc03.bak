@@ -28,6 +28,8 @@ Label Root
 		Var: Avg_Price
 		Param: adjs_ms
 		Var: Comp_Ave
+		Var: Sum_Ms
+		Var: Sector_Ms
 
 	}
 
@@ -42,7 +44,9 @@ Object: Root C	1
 Object: SECTOR C	1
 Var: Avg_Price 0 n + n n
 Param: adjs_ms 0 n + n n	0.1
-Var: Comp_Ave 0 n + n p
+Var: Comp_Ave 0 n + n n
+Var: Sum_Ms 0 s + n p
+Var: Sector_Ms 0 s + n n
 
 Object: FIRM C	5
 Var: Desired_Price 0 n + n n
@@ -52,7 +56,7 @@ Param: markup 0 n + n n	0.5	0.5	0.5	0.5	0.5
 Param: sd 0 n + n n	1	1	1	1	1
 Param: theta 0 s + n n	0.1	0.1	0.1	0.1	0.1
 Var: Price 1 n + n n	1	1	1	1	1
-Var: Ms 1 s + n p	0.2	0.2	0.2	0.2	0.2
+Var: Ms 1 s + n n	0.2	0.2	0.2	0.2	0.2
 Var: c_aleator 0 n + n n
 Var: Comp 0 s + n n
 Var: Quali 1 s + n n	1	1	1	1	1
@@ -86,6 +90,14 @@ Parameter_adjs_ms
 END_DESCRIPTION
 
 Variable_Comp_Ave
+
+END_DESCRIPTION
+
+Variable_Sum_Ms
+
+END_DESCRIPTION
+
+Variable_Sector_Ms
 
 END_DESCRIPTION
 
@@ -214,11 +226,60 @@ MODELBEGIN
 // insert your equations here, ONLY between the MODELBEGIN and MODELEND words
 
 
+// ================================================================
+// ----------------------------------------------------------------
+// ================================================================
+// EXERCÍCIO 03 B
+
+
+EQUATION("Sector_Ms")
+
+v[1] = SUM("Ms");
+
+RESULT(v[1])
+
+
+EQUATION ("Sum_Ms")
+
+v[0]=0; 
+CYCLE (cur, "FIRM")
+{
+v[1] = VS(cur, "Ms"); 
+v[0] = v[1];
+
+}
+
+v[3] = v[0]
+RESULT(v[3])
+
+
+
+
+EQUATION("Avg_Price")
+
+/*
+Mostra o que a Macro AVE faz
+
+*/
+
+v[0]=0; // iniciando o v[0]; pode ocorrer de não ser zero
+v[2]=0;
+CYCLE(cur, "FIRM")
+{
+	v[1] = VS(cur, "Price"); // VS= "S" é Especifico 
+	v[0] = v[0] + v[1]; // sum of prices
+	v[2] = v[2] + 1;  // count firms 
+}
+v[3] = v[0]/v[2];
+
+RESULT(v[3])
+
+
 
 // ================================================================
 // ----------------------------------------------------------------
 // ================================================================
-// EXERCÍCIO 03 -|-|-|-|
+// EXERCÍCIO 03 A
 
 EQUATION("Ms")
 /*
