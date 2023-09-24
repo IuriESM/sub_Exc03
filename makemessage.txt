@@ -1,0 +1,6 @@
+fun_sub_Exc03.cpp: In lambda function:
+fun_sub_Exc03.cpp:117:8: error: 'Vs' was not declared in this scope; did you mean 'VS'?
+  117 | v[1] = Vs(cur, "Ms");
+      |        ^~
+      |        VS
+make: *** [makefile:59: fun_sub_Exc03.o] Error 1

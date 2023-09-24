@@ -14,10 +14,20 @@ Label Root
 			Param: sd
 			Param: theta
 			Var: Price
+			Var: Ms
+			Var: c_aleator
+			Var: Comp
+			Var: Quali
+			Param: elas_p
+			Param: elas_q
+			Param: q_min
+			Param: q_max
 
 		}
 
 		Var: Avg_Price
+		Param: adjs_ms
+		Var: Comp_Ave
 
 	}
 
@@ -30,7 +40,9 @@ DATA
 Object: Root C	1
 
 Object: SECTOR C	1
-Var: Avg_Price 0 s + n p
+Var: Avg_Price 0 n + n n
+Param: adjs_ms 0 n + n n	0.1
+Var: Comp_Ave 0 n + n n
 
 Object: FIRM C	5
 Var: Desired_Price 0 n + n n
@@ -39,7 +51,15 @@ Param: avg 0 n + n n	5	5	5	5	5
 Param: markup 0 n + n n	0.5	0.5	0.5	0.5	0.5
 Param: sd 0 n + n n	1	1	1	1	1
 Param: theta 0 s + n n	0.1	0.1	0.1	0.1	0.1
-Var: Price 1 s + n n	7.35789155123791	7.35789155123791	7.35789155123791	7.35789155123791	7.35789155123791
+Var: Price 1 n + n n	1	1	1	1	1
+Var: Ms 1 s + n p	0.2	0.2	0.2	0.2	0.2
+Var: c_aleator 0 n + n n
+Var: Comp 0 s + n n
+Var: Quali 1 s + n n	1	1	1	1	1
+Param: elas_p 0 n + n n	1	1	1	1	1
+Param: elas_q 0 n + n n	1	1	1	1	1
+Param: q_min 0 n + n n	0	0	0	0	0
+Param: q_max 0 n + n n	1	1	1	1	1
 
 SIM_NUM 1
 SEED 7
@@ -59,6 +79,14 @@ END_DESCRIPTION
 
 Variable_Avg_Price
 Mostra o que a Macro AVE faz
+END_DESCRIPTION
+
+Parameter_adjs_ms
+
+END_DESCRIPTION
+
+Variable_Comp_Ave
+
 END_DESCRIPTION
 
 Object_FIRM
@@ -109,6 +137,60 @@ _INIT_
 All 5 instances equal to 1
 END_DESCRIPTION
 
+Variable_Ms
+msi,t - é a participação de mercado da empresa i no período t; 
+
+Ms = Ms_t-1 (1+u_j ((co/co_med) - 1))
+
+Participação de Mercado = Participação de Mercado no Período T-1 * (1 + parâmetro de ajuste da participação de mercado do setor * ((competitividade da empresa i no período t / competitividade média do setor j no período t))
+_INIT_
+All 5 instances equal to 0.2
+END_DESCRIPTION
+
+Variable_c_aleator
+componente aleatório seguindo uma distribuição uniforme (qmin = 0 e qmax = 1)
+END_DESCRIPTION
+
+Variable_Comp
+Comp = (q^(e^q))/ p^(e^p)
+
+Competitividade da empresa i no período t = qualidade da empresa i no período t^(elasticidade da qualidade) / preço da empresa i no período t^(elasticidade do preço)
+
+pow( a, b ): the power b of a
+END_DESCRIPTION
+
+Variable_Quali
+Quali = q_t-1 + c_t 
+
+c_t = U(q^min, q^max)
+
+qualidade da empresa i no período t = qualidade da empresa i no período t-1 + componente aleatório seguindo uma distribuição uniforme (qmin = 0 e qmax = 1)
+_INIT_
+All 5 instances equal to 1
+END_DESCRIPTION
+
+Parameter_elas_p
+
+_INIT_
+All 5 instances equal to 1
+END_DESCRIPTION
+
+Parameter_elas_q
+
+_INIT_
+All 5 instances equal to 1
+END_DESCRIPTION
+
+Parameter_q_min
+
+END_DESCRIPTION
+
+Parameter_q_max
+
+_INIT_
+All 5 instances equal to 1
+END_DESCRIPTION
+
 
 DOCUOBSERVE
 
@@ -131,6 +213,100 @@ MODELBEGIN
 
 // insert your equations here, ONLY between the MODELBEGIN and MODELEND words
 
+
+
+// ================================================================
+// ----------------------------------------------------------------
+// ================================================================
+// EXERCÍCIO 03 -|-|-|-|
+
+EQUATION("Ms")
+/*
+msi,t - é a participação de mercado da empresa i no período t; 
+
+Ms = Ms_t-1 (1+u_j ((co/co_med) - 1))
+
+Participação de Mercado = Participação de Mercado no Período T-1 * (1 + parâmetro de ajuste da participação de mercado do setor * ((competitividade da empresa i no período t / competitividade média do setor j no período t))
+
+*/
+
+v[0] = VL("Ms", 1);
+v[1] = V("adjs_ms");
+v[2] = V("Comp");
+v[3] = V("Comp_Ave");
+v[4] = v[0]*(1+v[1]*(v[2]/v[3]-1));
+
+RESULT(v[4])
+
+
+EQUATION("Comp_Ave")
+
+v[1] = AVE("Comp");
+
+RESULT(v[1])
+
+
+
+EQUATION("Comp")
+/*
+Comp = (q^(e^q))/ p^(e^p)
+
+Competitividade da empresa i no período t = qualidade da empresa i no período t^(elasticidade da qualidade) / preço da empresa i no período t^(elasticidade do preço)
+
+pow( a, b ): the power b of a
+*/
+v[5] = V("Quali");
+v[6] = V("Price");
+v[7] = V("elas_q");
+v[8] = V("elas_p");
+
+v[9] = (pow(v[5],v[7]))/(pow(v[6],v[8]));
+RESULT(v[9])
+
+
+EQUATION("Quali")
+/*
+Quali = q_t-1 + c_t 
+
+c_t = U(q^min, q^max)
+
+qualidade da empresa i no período t = qualidade da empresa i no período t-1 + componente aleatório seguindo uma distribuição uniforme (qmin = 0 e qmax = 1)
+*/
+
+v[9] = VL("Quali", 1);
+v[10] = V("c_aleator");
+
+v[11] = v[9] + v[10];
+
+RESULT(v[11])
+
+
+EQUATION("c_aleator")
+/*
+componente aleatório seguindo uma distribuição uniforme (qmin = 0 e qmax = 1)
+*/
+
+v[12] = V("q_min");
+v[13] = V("q_max");
+v[14] = uniform(v[12], v[13]);
+
+RESULT(v[14])
+
+
+
+
+
+
+
+
+
+// ================================================================
+// ----------------------------------------------------------------
+// ================================================================
+
+// ================================================================
+// ----------------------------------------------------------------
+// ================================================================
 
 // ================================================================
 // ----------------------------------------------------------------
