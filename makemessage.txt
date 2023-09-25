@@ -1,0 +1,16 @@
+In file included from C:/Lsd-master/Lsd-master/src/fun_head_fast.h:22,
+                 from fun_sub_Exc03.cpp:3:
+fun_sub_Exc03.cpp: In lambda function:
+fun_sub_Exc03.cpp:36:21: error: 'Sum_Ms' was not declared in this scope
+   36 | v[0] = WRITE( "Ms", Sum_Ms);
+      |                     ^~~~~~
+C:/Lsd-master/Lsd-master/src/fun_head.h:456:49: note: in definition of macro 'WRITE'
+  456 | #define WRITE( X, Y ) ( p->write( ( char * ) X, Y, t, 0 ) )
+      |                                                 ^
+C:/Lsd-master/Lsd-master/src/fun_head.h:246:32: error: expected primary-expression before ';' token
+  246 |                         res = X; \
+      |                                ^
+fun_sub_Exc03.cpp:38:1: note: in expansion of macro 'RESULT'
+   38 | RESULT( )
+      | ^~~~~~
+make: *** [makefile:59: fun_sub_Exc03.o] Error 1

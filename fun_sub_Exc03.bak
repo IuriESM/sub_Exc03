@@ -14,47 +14,18 @@ MODELBEGIN
 // ================================================================
 // EXERCÍCIO 03 B
 
-
-EQUATION("Sector_Ms")
-
-v[1] = SUM("Ms");
-
-RESULT(v[1])
-
-
 EQUATION ("Sum_Ms")
+
+v[5] = SUM("Ms");
 
 v[0]=0; 
 CYCLE (cur, "FIRM")
 {
 v[1] = VS(cur, "Ms"); 
 v[0] = v[0] + v[1];
-
-
 }
 
-v[3] = v[0]
-RESULT(v[3])
-
-
-
-
-EQUATION("Avg_Price")
-
-/*
-Mostra o que a Macro AVE faz
-
-*/
-
-v[0]=0; // iniciando o v[0]; pode ocorrer de não ser zero
-v[2]=0;
-CYCLE(cur, "FIRM")
-{
-	v[1] = VS(cur, "Price"); // VS= "S" é Especifico 
-	v[0] = v[0] + v[1]; // sum of prices
-	v[2] = v[2] + 1;  // count firms 
-}
-v[3] = v[0]/v[2];
+v[3] = v[0]/v[5]
 
 RESULT(v[3])
 
