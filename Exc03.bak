@@ -29,7 +29,6 @@ Label Root
 		Param: adjs_ms
 		Var: Comp_Ave
 		Var: Sum_Ms
-		Var: Sector_Ms
 
 	}
 
@@ -45,8 +44,7 @@ Object: SECTOR C	1
 Var: Avg_Price 0 n + n n
 Param: adjs_ms 0 n + n n	0.1
 Var: Comp_Ave 0 n + n n
-Var: Sum_Ms 0 s + n n
-Var: Sector_Ms 0 n + n n
+Var: Sum_Ms 0 s + n p
 
 Object: FIRM C	5
 Var: Desired_Price 0 n + n n
@@ -94,10 +92,6 @@ Variable_Comp_Ave
 END_DESCRIPTION
 
 Variable_Sum_Ms
-
-END_DESCRIPTION
-
-Variable_Sector_Ms
 
 END_DESCRIPTION
 
@@ -231,26 +225,6 @@ MODELBEGIN
 // ================================================================
 // EXERCÍCIO 03 B
 
-
-EQUATION("Sector_Ms") // Variável criada para fazer teste
-
-v[1] = SUM("Ms");
-
-CYCLE (cur, "FIRM")
-{
-v[2] = VS(cur, "Ms");
-
-
-
-v[3] = v[2]/v[1];
-
-}
-
-RESULT(v[3])
-
-
-
-
 EQUATION ("Sum_Ms")
 
 v[5] = SUM("Ms");
@@ -262,29 +236,9 @@ v[1] = VS(cur, "Ms");
 v[0] = v[0] + v[1];
 }
 
-v[3] = v[0]/v[5]
+v[3] = v[0]/v[5];
 
-RESULT(v[3])
-
-
-
-
-EQUATION("Avg_Price")
-
-/*
-Mostra o que a Macro AVE faz
-
-*/
-
-v[0]=0; // iniciando o v[0]; pode ocorrer de não ser zero
-v[2]=0;
-CYCLE(cur, "FIRM")
-{
-	v[1] = VS(cur, "Price"); // VS= "S" é Especifico 
-	v[0] = v[0] + v[1]; // sum of prices
-	v[2] = v[2] + 1;  // count firms 
-}
-v[3] = v[0]/v[2];
+WRITE("Ms", v[3]);
 
 RESULT(v[3])
 

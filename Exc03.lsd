@@ -44,7 +44,7 @@ Object: SECTOR C	1
 Var: Avg_Price 0 n + n n
 Param: adjs_ms 0 n + n n	0.1
 Var: Comp_Ave 0 n + n n
-Var: Sum_Ms 0 s + n n
+Var: Sum_Ms 0 s + n p
 
 Object: FIRM C	5
 Var: Desired_Price 0 n + n n
@@ -54,7 +54,7 @@ Param: markup 0 n + n n	0.5	0.5	0.5	0.5	0.5
 Param: sd 0 n + n n	1	1	1	1	1
 Param: theta 0 s + n n	0.1	0.1	0.1	0.1	0.1
 Var: Price 1 n + n n	1	1	1	1	1
-Var: Ms 1 s + n p	0.2	0.2	0.2	0.2	0.2
+Var: Ms 1 s + n n	0.2	0.2	0.2	0.2	0.2
 Var: c_aleator 0 n + n n
 Var: Comp 0 s + n n
 Var: Quali 1 s + n n	1	1	1	1	1
@@ -236,11 +236,11 @@ v[1] = VS(cur, "Ms");
 v[0] = v[0] + v[1];
 }
 
-v[3] = v[0]/v[5]
+v[3] = v[0]/v[5];
+
+WRITE("Ms", v[3]);
 
 RESULT(v[3])
-
-
 
 
 
