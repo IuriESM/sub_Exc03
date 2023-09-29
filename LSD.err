@@ -1,0 +1,20 @@
+
+
+====================> NEW TCL SESSION
+
+(09/29/23 16:50:01)
+Command:
+set res [ winfo exists "%s" ]
+Message:
+can't read "list": no such variable
+-----
+
+
+====================> NEW TCL SESSION
+
+(09/29/23 16:50:29)
+Command:
+set res [ winfo exists "%s" ]
+Message:
+can't read "list": no such variable
+-----

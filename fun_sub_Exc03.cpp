@@ -8,6 +8,65 @@ MODELBEGIN
 
 // insert your equations here, ONLY between the MODELBEGIN and MODELEND words
 
+/*
+EQUATION("Init")
+
+v[0]=V("initial_number_firms"); //5
+
+for(i=0, i<v[0],i++)
+{
+cur=RNDDRAW_FAIR("FIRM");
+ADDOBJ_EX("FIRM", cur);
+WRITEL("Ms", 1, 1/v[0]); 
+}
+
+PARAMETER
+
+RESULT(0)
+*/
+
+// ================================================================
+// ----------------------------------------------------------------
+// ================================================================
+// EXERCÍCIO 03 C
+
+
+EQUATION ("Exit")
+CYCLE_SAFE (cur, "FIRM")
+
+{
+v[0]=VS(cur, "Ms");
+v[1]=V("ms_threshold");
+	if(v[0]<v[1])
+		DELETE(cur); 
+}
+RESULT(0)
+
+EQUATION ("Entry")
+v[0]=V("switch_entry");
+if(v[0]==1)
+{
+	v[1]=MAX("Ms");
+	cur=SEARCH_CND("Ms", v[1]);
+	ADDOBJ_EX("FIRM", cur);
+}
+if(v[0]==2)
+{
+	cur=RNDDRAW_FAIR("FIRM");
+	ADDOBJ_EX("FIRM", cur);
+}
+RESULT(0)
+
+EQUATION("Inverse_HHI")
+
+	v[0]=0;
+	CYCLE(cur, "FIRM")
+	{
+		v[1]=VS(cur, "Ms");
+		v[0]=v[0]+v[1]*v[1];
+	}
+	v[2]=v[0]!=0? 1/v[0] : 0;
+RESULT(v[2])
 
 // ================================================================
 // ----------------------------------------------------------------
@@ -18,17 +77,16 @@ EQUATION ("Sum_Ms")
 
 v[5] = SUM("Ms");
 
-v[0]=0; 
 CYCLE (cur, "FIRM")
 {
-v[1] = VS(cur, "Ms"); 
-v[0] = v[0] + v[1];
+v[1] = VS(cur, "Ms");
+ 
+WRITES(cur, "Ms", v[1]/v[5]);
 }
 
-v[3] = v[0]/v[5];
+v[2]=SUM("Ms");
 
-
-RESULT(v[3])
+RESULT(v[2])
 
 
 
@@ -37,7 +95,7 @@ RESULT(v[3])
 // ================================================================
 // EXERCÍCIO 03 A
 
-EQUATION("Ms")
+EQUATION("Ms") // Nível da firma
 /*
 msi,t - é a participação de mercado da empresa i no período t; 
 
@@ -50,7 +108,7 @@ Participação de Mercado = Participação de Mercado no Período T-1 * (1 + parâmetr
 v[0] = VL("Ms", 1);
 v[1] = V("adjs_ms");
 v[2] = V("Comp");
-v[3] = V("Comp_Ave");
+v[3] = V("Comp_Ave"); // Nível do setor: v[2]= AVES(PARENT, "Comp") "Comecea a fazer essa busca pelo nível acima"
 v[4] = v[0]*(1+v[1]*(v[2]/v[3]-1));
 
 RESULT(v[4])
@@ -90,7 +148,7 @@ c_t = U(q^min, q^max)
 qualidade da empresa i no período t = qualidade da empresa i no período t-1 + componente aleatório seguindo uma distribuição uniforme (qmin = 0 e qmax = 1)
 */
 
-v[9] = VL("Quali", 1);
+v[9] = VL("Quali", 1); // Prof usou o v[0]=CURRENT; 
 v[10] = V("c_aleator");
 
 v[11] = v[9] + v[10];

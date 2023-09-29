@@ -1,3 +1,3 @@
-Avg_Price c_aleator Comp Comp_Ave Cost Desired_Price Ms Price Quali Sum_Ms
-adjs_ms avg elas_p elas_q markup q_max q_min sd theta
+Avg_Price c_aleator Comp Comp_Ave Cost Desired_Price Entry Exit Init Inverse_HHI Ms Price Quali Sum_Ms
+adjs_ms avg elas_p elas_q initial_number_firms markup ms_threshold q_max q_min sd switch_entry theta
 FIRM
